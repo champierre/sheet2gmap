@@ -105,7 +105,7 @@
           sidebar_html += `<b>${i + 1}</b> <a href="javascript:openWindow(${i})">${name}<\/a><br />`;
         }
 
-        document.getElementById("sidebar").innerHTML = '<div style="font-size:18px;font-weight:bold;margin-bottom:10px;">List</div>' + sidebar_html;
+        document.getElementById("sidebar").innerHTML = `<a href="https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?usp=sharing">元データ</a>` + sidebar_html;
       }
 
       function markerEvent(i) {
