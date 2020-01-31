@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>sheet2gmap</title>
+    <style>
+      #map {
+        height: 100%;
+      }
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #sidebar {
+        position: absolute;
+        top: 10%;
+        left: 77%;
+        width: 20%;
+        height: 40%;
+        border: 1px solid #666;
+        padding: 6px;
+        background-color: white;
+        font-family: Meriyo UI;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <td><div id="sidebar"></div></td>
+    <script src="constants.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=AIzaSyDuGsDZbA_qhW_994yBcxGTwh7QssOqGEw&callback=initMap" async defer></script>
+    <script>
+      var map;
+      var marker = [];
+      var infoWindow = [];
+      var windowOpened;
+
+      function parseData(data) {
+        var keys = data.values[0];
+        var markerData = [];
+        data.values.forEach(function(value, i) {
+          if (i > 0) {
+            var hash = {};
+            value.forEach(function(d, j) {
+              hash[keys[j]] = d;
+            });
+            markerData.push(hash);
+          }
+        });
+        return markerData;
+      }
+
+      function initMap() {
+        var target = document.getElementById('map');
+        var centerp = {lat: 35.6679191, lng: 139.4606805};
+
+        //マップ表示
+        map = new google.maps.Map(target, {
+          center: centerp,
+          zoom: 7,
+        });
+
+        //APIにてデータを取得して、位置とマーカーをセットするfunctionを呼び出す
+        var request = new XMLHttpRequest();
+        request.open('GET', `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/sheet1?key=${API_KEY}`, true);
+        request.responseType = 'json';
+
+        request.onload = function () {
+          var data = this.response;
+          var markerData = parseData(data);
+          setData(markerData);
+        };
+
+        request.send();
+      }
+
+      function addMarker(i, data) {
+        var markerLatLng = new google.maps.LatLng({
+          lat: Number(data['緯度']),
+          lng: Number(data['経度'])
+        });
+        marker[i] = new google.maps.Marker({
+          position: markerLatLng,
+          map: map
+        });
+
+        var info = '<div style="font-size:18px;font-weight:bold;margin-bottom:10px;">' + data['名称'] + '</div>';
+        infoWindow[i] = new google.maps.InfoWindow({
+          content: info
+        });
+
+        markerEvent(i);
+      }
+
+      function setData(markerData){
+        var sidebar_html = "";
+        for (var i = 0; i < markerData.length; i++) {
+          var latitude = markerData[i]['緯度'];
+          if (!latitude) { continue; }
+          addMarker(i, markerData[i]);
+          var name = markerData[i]['名称'];
+
+          sidebar_html += `<b>${i + 1}</b> <a href="javascript:openWindow(${i})">${name}<\/a><br />`;
+        }
+
+        document.getElementById("sidebar").innerHTML = '<div style="font-size:18px;font-weight:bold;margin-bottom:10px;">List</div>' + sidebar_html;
+      }
+
+      function markerEvent(i) {
+        marker[i].addListener('click', function() {
+          openWindow(i);
+        });
+      }
+
+      function openWindow(i) {
+        if(windowOpened){
+          windowOpened.close();
+        }
+        infoWindow[i].open(map, marker[i]);
+        windowOpened = infoWindow[i];
+      }
+    </script>
+  </body>
+</html>
