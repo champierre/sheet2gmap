@@ -2,7 +2,7 @@
 
 sheet2gmap はたぶん世界一簡単にデータを更新できるマップツールです。
 
-![デモ](images/sheet2gmap.gif)
+<img src="images/sheet2gmap.gif" width="300" />
 
 1. [デモサイト](https://champierre.github.io/sheet2gmap/)を開いて下さい。
 2. 「元データ」のリンクをクリックして、Google スプレッドシートを開きます。
