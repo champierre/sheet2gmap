@@ -56,13 +56,11 @@
         var target = document.getElementById('map');
         var centerp = {lat: 35.6679191, lng: 139.4606805};
 
-        //マップ表示
         map = new google.maps.Map(target, {
           center: centerp,
           zoom: 7,
         });
 
-        //APIにてデータを取得して、位置とマーカーをセットするfunctionを呼び出す
         var request = new XMLHttpRequest();
         request.open('GET', `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/sheet1?key=${API_KEY}`, true);
         request.responseType = 'json';
