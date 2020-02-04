@@ -93,17 +93,18 @@
       }
 
       function setData(markerData){
-        var sidebar_html = "";
+        var elements = [];
         for (var i = 0; i < markerData.length; i++) {
           var latitude = markerData[i]['緯度'];
           if (!latitude) { continue; }
           addMarker(i, markerData[i]);
           var name = markerData[i]['名称'];
 
-          sidebar_html += `<b>${i + 1}</b> <a href="javascript:openWindow(${i})">${name}<\/a><br />`;
+          elements.push(`<b>${i + 1}</b> <a href="javascript:openWindow(${i})">${name}<\/a><br />`);
         }
+        sidebar_html = elements.slice(elements.length - 15).join("\n");
 
-        document.getElementById("sidebar").innerHTML = `<a target="_blank" href="https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?usp=sharing">元データ(Google スプレッドシート)</a><br /><a target="_blank" href="https://github.com/champierre/sheet2gmap">ソースコード(GitHub)</a><br /><br />` + sidebar_html;
+        document.getElementById("sidebar").innerHTML = `<a target="_blank" href="https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?usp=sharing">元データ(Google スプレッドシート)</a><br /><a target="_blank" href="https://github.com/champierre/sheet2gmap">ソースコード(GitHub)</a><br /><br />最新15ヶ所だけを表示<br />` + sidebar_html;
       }
 
       function markerEvent(i) {
