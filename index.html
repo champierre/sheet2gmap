@@ -102,7 +102,12 @@
 
           elements.push(`<b>${i + 1}</b> <a href="javascript:openWindow(${i})">${name}<\/a><br />`);
         }
-        sidebar_html = elements.slice(elements.length - 15).join("\n");
+        var sidebar_html = null;
+        if (elements.length > 15) {
+          sidebar_html = elements.slice(elements.length - 15).join("\n");
+        } else {
+          sidebar_html = elements.join("\n");
+        }
 
         document.getElementById("sidebar").innerHTML = `<a target="_blank" href="https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?usp=sharing">元データ(Google スプレッドシート)</a><br /><a target="_blank" href="https://github.com/champierre/sheet2gmap">ソースコード(GitHub)</a><br /><br />最新15ヶ所だけを表示<br />` + sidebar_html;
       }
